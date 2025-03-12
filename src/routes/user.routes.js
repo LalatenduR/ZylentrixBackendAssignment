@@ -24,4 +24,8 @@ router.route("/update/:id").put(validateUpdateUser,updateUser);
 
 router.route("/delete/:id").delete(deleteUser);
 
+router.use((req,res)=>{
+    res.status(404).json({error:"The requested route does not exist. Please check the URL and try again."});
+})
+
 export default router;
