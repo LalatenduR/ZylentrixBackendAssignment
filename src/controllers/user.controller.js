@@ -41,6 +41,7 @@ const getOneUser=async(req,res)=>{
     if(!mongoose.Types.ObjectId.isValid(id)){
         throw new apiError(400,"Invalid User ID"); 
     }
+    
     try{
         const user=await User.findById(id);
         if(!user){
