@@ -4,45 +4,42 @@ import mongoose from "mongoose";
 import {apiResponse} from "../utils/apiResponse.js";
 
 // 1.Creating a new User
-const createUser=async(req,res)=>{
+const createUser=async(req,res,next)=>{
     const {name,email,age}=req.body;
 
-    const existingUser=await User.findOne(
-        {email:email}
-    )
-    if(existingUser){
-        throw new apiError(400,"User already exists");
-    }
-
     try {
+        const existingUser=await User.findOne(
+            {email:email}
+        )
+        if(existingUser){
+            throw new apiError(400,"User already exists");
+        }
         const user = await User.create(req.body);
         return res.status(201).json(new apiResponse(201,"User Created!!",user));
     } catch (err) {
-        throw new apiError(500,err.message);
+        next(err);
     }
 };
 
 // 2.Retrieving all Users
-const getAllUsers=async(req,res)=>{
+const getAllUsers=async(req,res,next)=>{
     try{
         const users=await User.find();
         return res.status(200).json(new apiResponse(200,"All Users",users));
     }
     catch(err){
-        throw new apiError(500,err.message);
+        return next(new apiError(500,err.message));
     }
 };
 
 // 3.Retrieving a single User
-const getOneUser=async(req,res)=>{
+const getOneUser=async(req,res,next)=>{
     const {id}=req.params;
-
-    // Check if the id is a valid ObjectId
-    if(!mongoose.Types.ObjectId.isValid(id)){
-        throw new apiError(400,"Invalid User ID"); 
-    }
-    
     try{
+        // Check if the id is a valid ObjectId
+        if(!mongoose.Types.ObjectId.isValid(id)){
+            throw new apiError(400,"Invalid User ID"); 
+        }
         const user=await User.findById(id);
         if(!user){
             throw new apiError(404,"User not found");
@@ -50,30 +47,29 @@ const getOneUser=async(req,res)=>{
         return res.status(200).json(new apiResponse(200,"User",user));
     }
     catch(err){
-        throw new apiError(500,err.message);
+        next(err);
     }
 };
 
 // 4.Updating a User
-const updateUser=async(req,res)=>{
+const updateUser=async(req,res,next)=>{
     const {id}=req.params;
     const updates=req.body;
 
-    // Check if the id is a valid ObjectId
-    if(!mongoose.Types.ObjectId.isValid(id)){
-        throw new apiError(400,"Invalid User ID"); 
-    }
-
-    if(updates.email){
-        const existingUser=await User.findOne(
-            {email:updates.email}
-        )
-        if(existingUser){
-            throw new apiError(400,"User already exists");
-        }
-    }
-
     try{
+        // Check if the id is a valid ObjectId
+        if(!mongoose.Types.ObjectId.isValid(id)){
+            throw new apiError(400,"Invalid User ID"); 
+        }
+
+        if(updates.email){
+            const existingUser=await User.findOne(
+                {email:updates.email}
+            )
+            if(existingUser){
+                throw new apiError(400,"Update email already exists");
+            }
+        }
         if(Object.keys(req.body).length===0){
             throw new apiError(400,"Atleast one field is required to update");
         }
@@ -95,19 +91,18 @@ const updateUser=async(req,res)=>{
         return res.status(200).json(new apiResponse(200,"User Updated",user));
     }
     catch(err){
-        throw new apiError(500,err.message);
+        next(err);
     }
 }
 
 // 5.Deleting a User
-const deleteUser=async(req,res)=>{
+const deleteUser=async(req,res,next)=>{
     const {id}=req.params;
-
-        // Check if the id is a valid ObjectId
-    if(!mongoose.Types.ObjectId.isValid(id)){
-        throw new apiError(400,"Invalid User ID"); 
-    }
     try{
+        // Check if the id is a valid ObjectId
+        if(!mongoose.Types.ObjectId.isValid(id)){
+            throw new apiError(400,"Invalid User ID"); 
+        }
         const user=await User.findByIdAndDelete(id);
         if(!user){
             throw new apiError(404,"User not found");
@@ -115,7 +110,7 @@ const deleteUser=async(req,res)=>{
         return res.status(200).json(new apiResponse(200,"User Deleted",user));
     }
     catch(err){
-        throw new apiError(500,err.message);
+        next(err);
     }
 }
 
