@@ -34,7 +34,7 @@ const getAllUsers=async(req,res)=>{
         return res.status(200).json(new apiResponse(200,"All Users",users));
     }
     catch(err){
-        throw new apiError(res,400,err.message);
+        throw new apiError(400,err.message);
     }
 };
 
@@ -83,7 +83,7 @@ const updateUser=async(req,res)=>{
         return res.status(200).json(new apiResponse(200,"User Updated",user));
     }
     catch(err){
-        throw new apiError(res,500,err.message);
+        throw new apiError(500,err.message);
     }
 }
 
@@ -98,7 +98,7 @@ const deleteUser=async(req,res)=>{
         return res.status(200).json(new apiResponse(200,"User Deleted",user));
     }
     catch(err){
-        throw new apiError(res,500,err.message);
+        throw new apiError(500,err.message);
     }
 }
 
