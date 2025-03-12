@@ -1,10 +1,6 @@
 import mongoose,{model,Schema} from "mongoose";
 
 const UserSchema=new Schema({
-    _id:{
-        type:Schema.Types.ObjectId,
-        auto:true
-    },
     name:{
         type:String,
         required:true,
