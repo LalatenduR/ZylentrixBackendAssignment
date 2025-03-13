@@ -32,7 +32,7 @@ Ensure you have the following installed before proceeding:
 4. Configure environment variables:
 
    - Copy `.env.example` to `.env`
-   - Update necessary values (e.g., database URL, API keys, etc.)
+   - Update necessary values (e.g., MongoDB URI, PORT, etc.)
 
 5. Start the development server:
 
